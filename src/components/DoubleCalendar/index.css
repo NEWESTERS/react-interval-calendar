@@ -1,0 +1,13 @@
+.double-calendar {
+  width: 556px;
+  height: 284px;
+  background-color: #fff;
+  border-radius: 20px;  
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border: solid 2px #d8dae1;
+  border-radius: 10px;
+  overflow: hidden;
+}
