@@ -1,0 +1,53 @@
+.date-interval-field {
+    margin-left: 200px;
+    border: none;
+    width: 155px;
+    height: 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    padding: 8px 45px 8px 15px;
+    line-height: 14px;
+    color: black;
+}
+
+.field {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.clear-button {
+    transform: rotate(45deg);
+    margin-left: -35px;
+    width: 17px;
+    height: 17px;
+    border-radius: 10px;
+    background-color: #4a5269;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.clear-button:hover {
+    background-color: black;
+}
+
+.clear-button::after {
+    content: "";
+    width: 60%;
+    height: 1.5px;
+    background-color: white;
+    margin-left: -6px;
+}
+
+.clear-button::before {
+    margin-left: 4px;
+    content: "";
+    width: 1.5px;
+    height: 60%;
+    background-color: white;
+    
+}
+
