@@ -59,6 +59,7 @@
 .title {
     width: 150px;
     font-size: 14px;
+    text-transform: capitalize;
 }
 
 .days {

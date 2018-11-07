@@ -14,12 +14,6 @@ export interface Props {
 }
 
 class Calendar extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-
-    Moment.locale('ru')
-  }
-
   // Генерация матрицы месяца
   getDaysForMonth = () => {
     const weeks = 6,
@@ -48,36 +42,32 @@ class Calendar extends React.Component<Props> {
 
   setNextMonth = () => {
     const currentMonth = Moment(this.props.month)
-        currentMonth.add(1, 'month')
+    currentMonth.add(1, 'month')
 
     this.props.setMonth(currentMonth)
   }
 
   setPreviousMonth = () => {
     const currentMonth = Moment(this.props.month)
-        currentMonth.subtract(1, 'month')
+    currentMonth.subtract(1, 'month')
 
     this.props.setMonth(currentMonth)
-  }
-
-  firstLetterToUpperCase = (text: string) => {
-    return text[0].toUpperCase() + text.slice(1)
   }
 
   render() {
     return (
       <div className="calendar">
         <div className="month">
-            <div className="control arrow-button left" onClick={ this.setPreviousMonth }></div>
-            <div className="control title">{ this.firstLetterToUpperCase(this.props.month.format('MMMM YYYY')) }</div>
-            <div className="control arrow-button right" onClick={ this.setNextMonth }></div>
+            <div className="control arrow-button left" onClick={ this.setPreviousMonth } />
+            <div className="control title">{ this.props.month.format('MMMM YYYY') }</div>
+            <div className="control arrow-button right" onClick={ this.setNextMonth } />
         </div>
         <div className="days">
             {   
                 <div className="week">
                     {   
                         // Рендеринг дней недели в шапке
-                        ['ПН','ВТ','СР','ЧТ','ПТ','СБ','ВС'].map( (day, i) => {
+                        ["ПН","ВТ","СР","ЧТ","ПТ","СБ","ВС"].map( (day, i) => {
                             return <div key={ i } className="day label">{ day }</div> 
                         })
                     }
@@ -113,10 +103,10 @@ class Calendar extends React.Component<Props> {
                                             { className += " weekend" }
                                         }
                                         // Рендеринг элемента с днём
-                                        return <div key={ i * 7 + j } className={ className } onClick={ _ => this.props.onDayClick(day) }>{ day.date() }</div>
+                                        return <div key={ i * 7 + j } className={ className } onClick={ () => this.props.onDayClick(day) }>{ day.date() }</div>
                                     } else {
                                         // Рендеринг заглушки
-                                        return <div key={ i * 7 + j } className="day placeholder"></div>
+                                        return <div key={ i * 7 + j } className="day placeholder" />
                                     }
                                 })
                             }

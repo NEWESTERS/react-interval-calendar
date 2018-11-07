@@ -22,12 +22,10 @@ export default class DoubleCalendar extends React.Component<Props, State> {
   constructor(props: any) {
     super(props)
 
-    Moment.locale('ru')
-
     this.state = {
       isStartSelected: false,
-      firstMonth: props.selection.start !== undefined ? props.selection.start : Moment(),
-      secondMonth: props.selection.end !== undefined ? props.selection.end : Moment().month(Moment().month() + 1)
+      firstMonth: props.selection.start !== undefined ? Moment(props.selection.start) : Moment(),
+      secondMonth: props.selection.end !== undefined ? Moment(props.selection.end) : Moment().month(Moment().month() + 1)
     }
   }
 

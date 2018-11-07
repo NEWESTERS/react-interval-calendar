@@ -16,8 +16,6 @@ export default class DateIntervalField extends React.Component<{}, State> {
   constructor(props: any) {
     super(props)
 
-    Moment.locale('ru')
-
     this.state = {
       selection: {
         start: undefined,
@@ -45,11 +43,18 @@ export default class DateIntervalField extends React.Component<{}, State> {
       })
   }
 
-  selectionFormat = () => {
-    const start = this.state.selection.start,
-        end = this.state.selection.end
+  changeIsOpened = () => {
+    const { isOpened } = this.state
 
-    if (start == undefined || end == undefined) { return '' }
+    this.setState({
+      isOpened: !isOpened
+    })
+  }
+
+  selectionFormat = () => {
+    const { start, end } = this.state.selection
+
+    if (start === undefined || end === undefined) { return '' }
 
     return `${start.format('DD.MM.YYYY')} - ${end.format('DD.MM.YYYY')}`
   }
@@ -58,10 +63,10 @@ export default class DateIntervalField extends React.Component<{}, State> {
     return (
         <div>
             <div className="field">
-                <input className="date-interval-field" type="text" value={ this.selectionFormat() } onClick={ () => { this.setState({ isOpened: !this.state.isOpened }) } } readOnly />
-                { this.state.selection.start !== undefined && <div className={ "clear-button" } onClick={ this.clearSelection } ></div> }   
+                <input className="date-interval-field" type="text" value={ this.selectionFormat() } onClick={ this.changeIsOpened } readOnly />
+                { this.state.selection.start !== undefined && <div className={ "clear-button" } onClick={ this.clearSelection } /> }   
             </div>
-            { this.state.isOpened && <DoubleCalendar onSelect={this.calendarOnSelect.bind(this)} selection={this.state.selection} /> }
+            { this.state.isOpened && <DoubleCalendar onSelect={ this.calendarOnSelect } selection={ this.state.selection } /> }
         </div>
     );
   }
