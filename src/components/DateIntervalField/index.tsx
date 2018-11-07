@@ -13,6 +13,7 @@ interface State {
 }
 
 export default class DateIntervalField extends React.Component<{}, State> {
+  private node: HTMLDivElement;
   constructor(props: any) {
     super(props)
 
@@ -23,6 +24,15 @@ export default class DateIntervalField extends React.Component<{}, State> {
       },
       isOpened: false
     }
+  }
+
+  handleOutsideClick = (e: Event) => {
+    // ignore clicks on the component itself
+    if (this.node.contains(e.target as HTMLElement)) {
+      return;
+    }
+    
+    this.changeIsOpened();
   }
 
   calendarOnSelect = (start: Moment.Moment | undefined, end: Moment.Moment | undefined) => {
@@ -46,6 +56,12 @@ export default class DateIntervalField extends React.Component<{}, State> {
   changeIsOpened = () => {
     const { isOpened } = this.state
 
+    if (!isOpened) {
+      document.addEventListener('click', this.handleOutsideClick);
+    } else {
+      document.removeEventListener('click', this.handleOutsideClick);
+    }
+
     this.setState({
       isOpened: !isOpened
     })
@@ -61,12 +77,12 @@ export default class DateIntervalField extends React.Component<{}, State> {
 
   public render() {
     return (
-        <div>
+        <div className="date-interval-field" >
             <div className="field">
-                <input className="date-interval-field" type="text" value={ this.selectionFormat() } onClick={ this.changeIsOpened } readOnly />
+                <input className="date-interval-field-input" type="text" value={ this.selectionFormat() } onClick={ this.changeIsOpened } readOnly />
                 { this.state.selection.start !== undefined && <div className={ "clear-button" } onClick={ this.clearSelection } /> }   
             </div>
-            { this.state.isOpened && <DoubleCalendar onSelect={ this.calendarOnSelect } selection={ this.state.selection } /> }
+            <div ref={ (el: HTMLDivElement) => {this.node = el} }>{ this.state.isOpened && <DoubleCalendar onSelect={ this.calendarOnSelect } selection={ this.state.selection } /> }</div>
         </div>
     );
   }

@@ -1,4 +1,8 @@
 .date-interval-field {
+    width: 652px;
+}
+
+.date-interval-field-input {
     margin-left: 200px;
     border: none;
     width: 155px;
