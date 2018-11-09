@@ -19,40 +19,41 @@ interface State {
 }
 
 export default class DoubleCalendar extends React.Component<Props, State> {
-  constructor(props: any) {
-    super(props)
-
-    this.state = {
-      isStartSelected: false,
-      firstMonth: props.selection.start !== undefined ? Moment(props.selection.start) : Moment(),
-      secondMonth: props.selection.end !== undefined ? Moment(props.selection.end) : Moment().month(Moment().month() + 1)
-    }
-  }
+  public state = {
+    isStartSelected: false,
+    firstMonth: this.props.selection.start ? Moment(this.props.selection.start) : Moment(),
+    secondMonth: this.props.selection.end ? Moment(this.props.selection.end) : Moment().month(Moment().month() + 1)
+  } as State;
 
   onDayClick = (day: Moment.Moment) => {
-    const { selection } = this.props
+    const { selection } = this.props;
+    let { isStartSelected: startSelect } = this.state;
 
-    if(this.state.isStartSelected === false) {
-      selection.start = Moment(day)
-      selection.end = Moment(day)
-    } else if (selection.start !== undefined) {
+    if(!startSelect) {
+      selection.start = Moment(day);
+      selection.end = Moment(day);
+      startSelect = true;
+    } else if (selection.start) {
       if (selection.start.isBefore(day, 'day')) {
-        selection.end = Moment(day)
+        selection.end = Moment(day);
+        startSelect = false;
       } else {
-        selection.start = Moment(day)
-        selection.end = Moment(day)
+        selection.start = Moment(day);
+        selection.end = Moment(day);
+        startSelect = true;
       }      
-    }
+    };
 
     this.setState({
-      isStartSelected: !this.state.isStartSelected
-    })
+      isStartSelected: startSelect
+    });
 
-    this.props.onSelect(selection.start, selection.end)
+    this.props.onSelect(selection.start, selection.end);
   }
 
   setFirstMonth = (month: Moment.Moment) => {
-    const { secondMonth } = this.state
+    const { secondMonth } = this.state;
+
     if (month.isBefore(secondMonth, 'month')) {
       this.setState({
         firstMonth: month
@@ -61,11 +62,25 @@ export default class DoubleCalendar extends React.Component<Props, State> {
   }
 
   setSecondMonth = (month: Moment.Moment) => {
-    const { firstMonth } = this.state
+    const { firstMonth } = this.state;
+
     if (month.isAfter(firstMonth, 'month')) {
       this.setState({
         secondMonth: month
       })
+    }
+  }
+
+  checkNearMonths = (isLeftCalendar: boolean) => {
+    const { secondMonth } = this.state;
+    let firstMonth = Moment(this.state.firstMonth);
+
+    firstMonth.add(1, 'month');
+
+    if (firstMonth.isSame(secondMonth, 'month')) {
+      return isLeftCalendar ? "right" : "left";
+    } else {
+      return "none";
     }
   }
 
@@ -74,8 +89,8 @@ export default class DoubleCalendar extends React.Component<Props, State> {
       <div className="calendar-wrapper">
         <h3 className="calendar-header">ВЫБЕРИТЕ ПЕРИОД ОТОБРАЖЕНИЯ ДАННЫХ</h3>
         <div className="double-calendar">     
-          <Calendar selection={ this.props.selection } onDayClick={ this.onDayClick } month={ this.state.firstMonth } setMonth={ this.setFirstMonth } />
-          <Calendar selection={ this.props.selection } onDayClick={ this.onDayClick } month={ this.state.secondMonth } setMonth={ this.setSecondMonth } />
+          <Calendar selection={ this.props.selection } onDayClick={ this.onDayClick } month={ this.state.firstMonth } disabledArrow={ this.checkNearMonths(true) } setMonth={ this.setFirstMonth } />
+          <Calendar selection={ this.props.selection } onDayClick={ this.onDayClick } month={ this.state.secondMonth } disabledArrow={ this.checkNearMonths(false) } setMonth={ this.setSecondMonth } />
         </div>
       </div>
     );

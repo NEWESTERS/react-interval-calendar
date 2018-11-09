@@ -3,37 +3,24 @@ import DoubleCalendar from './DoubleCalendar';
 import './index.css';
 import * as Moment from 'moment';
 import 'moment/locale/ru';
+import { Popup } from 'semantic-ui-react';
+import 'semantic-ui-css/semantic.min.css';
+
 
 interface State {
   selection: {
     start: Moment.Moment | undefined;
     end: Moment.Moment | undefined;
   };
-  isOpened: boolean;
 }
 
 export default class DateIntervalField extends React.Component<{}, State> {
-  private node: HTMLDivElement;
-  constructor(props: any) {
-    super(props)
-
-    this.state = {
-      selection: {
-        start: undefined,
-        end: undefined
-      },
-      isOpened: false
+  public state = {
+    selection: {
+      start: undefined,
+      end: undefined
     }
-  }
-
-  handleOutsideClick = (e: Event) => {
-    // ignore clicks on the component itself
-    if (this.node.contains(e.target as HTMLElement)) {
-      return;
-    }
-    
-    this.changeIsOpened();
-  }
+  } as State;
 
   calendarOnSelect = (start: Moment.Moment | undefined, end: Moment.Moment | undefined) => {
     this.setState({
@@ -53,36 +40,25 @@ export default class DateIntervalField extends React.Component<{}, State> {
       })
   }
 
-  changeIsOpened = () => {
-    const { isOpened } = this.state
-
-    if (!isOpened) {
-      document.addEventListener('click', this.handleOutsideClick);
-    } else {
-      document.removeEventListener('click', this.handleOutsideClick);
-    }
-
-    this.setState({
-      isOpened: !isOpened
-    })
-  }
-
   selectionFormat = () => {
-    const { start, end } = this.state.selection
+    const { start, end } = this.state.selection;
 
-    if (start === undefined || end === undefined) { return '' }
+    if (start === undefined || end === undefined) { return '' };
 
-    return `${start.format('DD.MM.YYYY')} - ${end.format('DD.MM.YYYY')}`
+    return `${start.format('DD.MM.YYYY')} - ${end.format('DD.MM.YYYY')}`;
   }
 
   public render() {
     return (
         <div className="date-interval-field" >
-            <div className="field">
-                <input className="date-interval-field-input" type="text" value={ this.selectionFormat() } onClick={ this.changeIsOpened } readOnly />
-                { this.state.selection.start !== undefined && <div className={ "clear-button" } onClick={ this.clearSelection } /> }   
-            </div>
-            <div ref={ (el: HTMLDivElement) => {this.node = el} }>{ this.state.isOpened && <DoubleCalendar onSelect={ this.calendarOnSelect } selection={ this.state.selection } /> }</div>
+          <div className="field">
+            <Popup trigger= {
+              <input className="date-interval-field-input" type="text" value={ this.selectionFormat() } readOnly />   
+            } on="click" position="bottom center" >
+              <DoubleCalendar onSelect={ this.calendarOnSelect } selection={ this.state.selection } />
+            </Popup>
+            { this.state.selection.start && <div className={ "clear-button" } onClick={ this.clearSelection } /> }
+          </div>
         </div>
     );
   }

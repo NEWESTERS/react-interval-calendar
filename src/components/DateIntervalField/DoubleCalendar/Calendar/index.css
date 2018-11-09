@@ -3,7 +3,7 @@
     height: 100%;
     border-left: solid 1px #e2e4ec;
     margin-left: -2px;
-    -webkit-user-select: none;
+    user-select: none;
 }
 
 .month {
@@ -25,6 +25,12 @@
 .arrow-button {
     width: 30px;
     cursor: pointer;
+    transition: .3s ease;
+}
+
+.arrow-button.disabled {
+    opacity: .3;
+    pointer-events: none;
 }
 
 .arrow-button::after {
@@ -41,18 +47,14 @@
 }
 
 .arrow-button.left::after {
-    -webkit-transform: rotate(135deg);
-    -ms-transform: rotate(135deg);
     transform: rotate(135deg);
 }
 
 .arrow-button.right::after {
-    -webkit-transform: rotate(-45deg);
-    -ms-transform: rotate(-45deg);
     transform: rotate(-45deg);
 }
 
-.arrow-button:hover::after {
+.arrow-button:not(.disabled):hover::after {
     border-color: #5ac66f;
 }
 
@@ -124,10 +126,6 @@
     cursor: pointer;
     transition: all .3s ease;
 }
-
-/* .day:not(.label):hover {
-    transform: scale(1.2);
-} */
 
 .day:not(.label):not(.start-selected):not(.end-selected):not(.inner-selected):not(.placeholder):hover {
     border-radius: 15px;
